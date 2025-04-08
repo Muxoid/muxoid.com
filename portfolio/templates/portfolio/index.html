@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Muxoid.com</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/xterm/5.5.0/xterm.js"
+      integrity="sha512-Gujw5GajF5is3nMoGv9X+tCMqePLL/60qvAv1LofUZTV9jK8ENbM9L+maGmOsNzuZaiuyc/fpph1KT9uR5w3CQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/xterm/5.5.0/xterm.css"
+      integrity="sha512-AbNrj/oSHJaILgcdnkYm+DQ08SqVbZ8jlkJbFyyS1WDcAaXAcAfxJnCH69el7oVgTwVwyA5u5T+RdFyUykrV3Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/terminal.css@0.7.4/dist/terminal.min.css"
+    />
+    <script src="https://unpkg.com/marked@4.3.0/marked.min.js"></script>
+    <!-- xterm.js -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'portfolio/root.css' %}" />
+    <link rel="stylesheet" href="{% static 'portfolio/terminal.css' %}" />
+    <script>
+      var htmxUrl = "{% url 'portfolio:htmx_term_res' %}";
+    </script>
+    <script src="{% static 'portfolio/js/terminal.js' %}" defer></script>
+  </head>
+  <body class="dark">
+    <div class="terminal-nav">
+      <div class="terminal-logo">
+        <div class="logo terminal-prompt">
+          <a href="#" class="no-style">Muxoid</a>
+        </div>
+      </div>
+      <nav class="terminal-menu">
+        <ul>
+          <li><a class="menu-item" href="#">Blog</a></li>
+          <li><a class="menu-item" href="#">Notes</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Terminal area -->
+    <div id="terminal-container">
+      <div id="terminal"></div>
+    </div>
+
+    <!-- Your template -->
+    <div id="output" class="markdown-content" hx-swap-oob="outerHTML">
+      <div class="raw-markdown">{{stdout}}</div>
+    </div>
+
+    <!-- Include marked.js -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      document.addEventListener("htmx:afterSwap", function (event) {
+        const rawMarkdown = event.target.querySelector(".raw-markdown");
+        if (rawMarkdown) {
+          rawMarkdown.innerHTML = marked.parse(rawMarkdown.textContent);
+        }
+      });
+    </script>
+  </body>
+</html>
