@@ -17,7 +17,7 @@ const terminal = new Terminal({
 terminal.open(document.getElementById("terminal"));
 terminal.write("Welcome to the Muxoid Terminal!\n\r");
 terminal.write(pwd + "$ ");
-const csrftoken = document.cookie.match(/csrftoken=([^;]+)/)[1]; // Extract CSRF token from cookies
+//const csrftoken = getCookie("csrftoken""); // Extract CSRF token from cookies
 
 let inputBuffer = ""; // Buffer to store user input
 
@@ -65,10 +65,13 @@ async function sendCommandToBackend(command, args) {
     //terminal.write("$ ");
   }
   terminal.write(pwd + "$ ");
+  console.log("Send to HTMX");
   sendCommandToHTMX(command, args, pwd);
 }
 function sendCommandToHTMX(command, args, pwd) {
-  htmx.ajax("POST", htmxUrl, {
+
+  const csrftoken = getCookie("csrftoken");
+  htmx.ajax("POST", "/htmx-term-res/", {
     target: "#output",
     swap: "outerHTML",
     values: { command: command, args: args, pwd: pwd },
