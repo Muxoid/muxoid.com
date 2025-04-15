@@ -87,6 +87,9 @@ def execute_command(request):
 
                 files = File.objects.filter(directory=parent_directory)
 
+                file_list = list(files.values_list("title", flat=True))
+                dir_list = list(directories.values_list("name", flat=True))
+                dir_content = file_list + dir_list
                 file_names = "\n\r".join([file.title for file in files])
 
                 directory_names = "\n\r".join(
@@ -94,6 +97,7 @@ def execute_command(request):
                 )
                 context = {
                     "cmd": command.name,
+                    "dir_content": dir_content,
                     "stdout": directory_names + "\n\r" + file_names,
                 }
                 return JsonResponse(context)
