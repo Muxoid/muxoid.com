@@ -103,10 +103,10 @@ def execute_command(request):
                 return JsonResponse(context)
 
             case "id":
-                context = {"cmd": command.name, "stdout": "Muxoid"}
+                context = {"cmd": command.name, "stdout": "shawnco"}
 
             case "cd":
-                context = {"cmd": command.name, "cd": pwd, "stdout": ""}
+                context = {"cmd": command.name, "pwd": "/", "stdout": ""}
 
                 dir_array = pwd.split("/")
 
