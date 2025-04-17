@@ -1,10 +1,17 @@
 from sys import stdout
 from django.shortcuts import render
 from django.http import JsonResponse
-import json
+import json, random
 from django.views.decorators.csrf import csrf_exempt
-from .models import Command, Directory, File, Note  # Your model for storing respons
+from .models import (
+    Command,
+    Directory,
+    File,
+    Note,
+    Neofetch,
+)  # Your model for storing respons
 from rest_framework.decorators import api_view
+
 # Create your views here.
 
 
@@ -35,6 +42,13 @@ def htmx_term_res(request):
         if command_valid:
             if command_valid.name == "game":
                 return render(request, "portfolio/games/highway-racer.html")
+
+            if command_valid == "neofetch":
+                art_db = Neofetch.objects.all()
+                art_list = list(art_db)
+                random_art = random.choice(art_list)
+
+                context = {"cmd": command.name, "stdout": random_art.content}
 
             if not args and command_valid.name == "cat":
                 context = {"response_obj": "No args supplied for cat."}
@@ -71,7 +85,7 @@ def execute_command(request):
     command = Command.objects.filter(name=user_input).first()
     pwd = request.data.get("pwd")
     args = request.data.get("args")
-
+    print(command.name)
     if command:
         match command.name:
             case "ls":
@@ -104,6 +118,30 @@ def execute_command(request):
 
             case "id":
                 context = {"cmd": command.name, "stdout": "shawnco"}
+
+            case "neofetch":
+                art_db = Neofetch.objects.all()
+                art_list = list(art_db)
+                random_art = random.choice(art_list)
+
+                context = {"cmd": command.name, "stdout": random_art.content}
+
+            case "?":
+                man_page = (
+                    "NAME\r\n"
+                    "    basic-commands - Simple explanations for common shell commands\r\n"
+                    "\r\n"
+                    "SYNOPSIS\r\n"
+                    "    ls      List directory contents\r\n"
+                    "\r\n"
+                    "    cat     Display the contents of a file\r\n"
+                    "\r\n"
+                    "    id      Show user and group IDs\r\n"
+                    "\r\n"
+                    "    cd      Change the current directory\r\n"
+                    "\r\n"
+                )
+                context = {"cmd": command.name, "stdout": man_page}
 
             case "cd":
                 context = {"cmd": command.name, "pwd": "/", "stdout": ""}

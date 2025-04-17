@@ -60,6 +60,7 @@ const terminal = new Terminal({
 });
 terminal.open(document.getElementById("terminal"));
 terminal.write("Welcome to the Muxoid Terminal!\n\r");
+terminal.write("      ? for help menu.\n\r");
 terminal.write("shawnco@muxoid: " + pwd + "$ ");
 //const csrftoken = getCookie("csrftoken""); // Extract CSRF token from cookies
 
